@@ -1,0 +1,35 @@
+{
+    "plants": [
+      {
+        "type": "Flower",
+        "name": "Rose",
+        "maxHeight": 1.2,
+        "maxWidth": 0.5
+      },
+      {
+        "type": "Tree",
+        "name": "Oak",
+        "maxHeight": 20,
+        "maxWidth": 10
+      },
+      {
+        "type": "Bush",
+        "name": "Holly",
+        "maxHeight": 2.5,
+        "maxWidth": 2.5
+      },
+      {
+        "type": "Flower",
+        "name": "Tulip",
+        "maxHeight": 0.6,
+        "maxWidth": 0.2
+      },
+      {
+        "type": "Tree",
+        "name": "Maple",
+        "maxHeight": 15,
+        "maxWidth": 8
+      }
+    ]
+  }
+  

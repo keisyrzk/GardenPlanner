@@ -1,0 +1,33 @@
+{
+    "decorations": [
+      {
+        "type": "Flowerpot",
+        "name": "Ceramic Flowerpot",
+        "width": 0.5,
+        "depth": 0.5,
+        "height": 0.6
+      },
+      {
+        "type": "Fountain",
+        "name": "Stone Fountain",
+        "width": 2.0,
+        "depth": 2.0,
+        "height": 1.5
+      },
+      {
+        "type": "Flowerpot",
+        "name": "Plastic Flowerpot",
+        "width": 0.4,
+        "depth": 0.4,
+        "height": 0.5
+      },
+      {
+        "type": "Fountain",
+        "name": "Metal Fountain",
+        "width": 1.5,
+        "depth": 1.5,
+        "height": 1.0
+      }
+    ]
+  }
+  

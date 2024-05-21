@@ -1,0 +1,40 @@
+{
+    "architectures": [
+      {
+        "type": "Pergola",
+        "name": "Wooden Pergola",
+        "width": 3.0,
+        "depth": 4.0,
+        "height": 2.5
+      },
+      {
+        "type": "Patio",
+        "name": "Brick Patio",
+        "width": 5.0,
+        "depth": 5.0,
+        "height": 0.2
+      },
+      {
+        "type": "Pathway",
+        "name": "Stone Pathway",
+        "width": 1.0,
+        "depth": 10.0,
+        "height": 0.1
+      },
+      {
+        "type": "Swing",
+        "name": "Garden Swing",
+        "width": 1.5,
+        "depth": 1.5,
+        "height": 2.0
+      },
+      {
+        "type": "Patio",
+        "name": "Concrete Patio",
+        "width": 6.0,
+        "depth": 6.0,
+        "height": 0.3
+      }
+    ]
+  }
+  
