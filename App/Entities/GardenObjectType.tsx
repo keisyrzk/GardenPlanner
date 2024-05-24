@@ -5,13 +5,13 @@
     const myDecoration: GardenObjectType = GardenObjectType.DecorationType.Fountain;
  */
 
-enum GardenObjectType {
+export enum GardenObjectType {
   Plant,
   Architecture,
   Decoration
 }
 
-namespace GardenObjectType {
+export namespace GardenObjectType {
   export enum PlantType {
     Flower,
     Tree,

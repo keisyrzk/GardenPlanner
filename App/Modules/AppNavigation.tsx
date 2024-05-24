@@ -1,14 +1,18 @@
 import { NavigationContainer } from '@react-navigation/native';
-import PlantListView from './PlantListView';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+import MainView from './MainView';
 
 import {
-    StackScreenProps,
-    createStackNavigator,
-  } from '@react-navigation/stack';
-const Stack = createStackNavigator();
+  NativeStackScreenProps,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const queryClient = new QueryClient();
 const AppNavigation = () => {
   return (
+    <QueryClientProvider client={queryClient}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
@@ -19,14 +23,20 @@ const AppNavigation = () => {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="PlantListView"
-          component={PlantListView}
-          options={{title: 'Plant list'}}
-        />
       </Stack.Navigator>
     </NavigationContainer>
+    </QueryClientProvider>
   );
 };
+
+type RootStackParamList = {
+  Main: undefined;
+};
+
+export type MainProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Main',
+  'Main_id'
+>;
 
 export default AppNavigation;
