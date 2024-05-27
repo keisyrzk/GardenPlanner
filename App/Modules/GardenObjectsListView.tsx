@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SectionList, Text, StyleSheet, TouchableOpacity, ScrollView, View } from 'react-native';
+import { SectionList, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import colors from '../Resources/colors';
 import { GardenObject } from '../Entities/GardenObject'
 import { GardenObjectType } from '../Entities/GardenObjectType';
@@ -25,46 +25,47 @@ const GardenObjectsListView = ({
       const sections: GardenSection[] = [
         {
           title: 'Plants',
-          data: plants
+          data: plants.map(plant => new Plant(plant.id, plant.type, plant.name, plant.maxHeight, plant.maxWidth))
         },
         {
           title: 'Decorations',
-          data: decorations
+          data: decorations.map(decoration => new Decoration(decoration.id, decoration.type, decoration.width, decoration.height, decoration.depth))
         },
         {
           title: 'Architectures',
-          data: architecture
+          data: architecture.map(architecture => new Architecture(architecture.id, architecture.type, architecture.width, architecture.height, architecture.depth))
         }
       ];
       
-      const renderItem = ({ item }: { item: GardenObject }) => {
+      const renderItem = (item: GardenObject) => {
         switch (item.getObjectType()) {
           case GardenObjectType.Plant:
             const plant = item as Plant;
-            return <Text>{ plant.name }</Text>
+            return <Text style={styles.listItem}>{plant.name}</Text>
   
           case GardenObjectType.Decoration:
             const decoration = item as Decoration;
-            return <Text>{decoration.width} x {decoration.height} x {decoration.depth} [m]</Text>
+            return <Text style={styles.listItem}>{decoration.width} x {decoration.height} x {decoration.depth} [m]</Text>
 
           case GardenObjectType.Architecture:
             const architecture = item as Architecture;
-            return <Text>{architecture.width} x {architecture.height} x {architecture.depth} [m]</Text>
+            return <Text style={styles.listItem}>{architecture.width} x {architecture.height} x {architecture.depth} [m]</Text>
         }
       };
 
       return (
-        <ScrollView style={styles.scrollViewContentContainer}>
-          tutaj jest jakks problem z renderem
-          {/* <SectionList
-            sections={sections}
-            keyExtractor={(item, index) => item.id}
-            renderSectionHeader={({section: {title}}) => (
-              <Text style={styles.header}>{title}</Text>
-            )}
-            renderItem={ renderItem }
-          /> */}
-        </ScrollView>
+        <SectionList
+          sections={sections}
+          keyExtractor={(item, _) => item.id.toString()}
+          renderSectionHeader={({section: {title}}) => (
+            <Text style={styles.sectionHeader}>{title}</Text>
+          )}
+          renderItem={({item}) => (
+            <View style={styles.listItemContainer}>
+              {renderItem(item)}
+            </View>
+          )}
+        />
       );
 };
 
@@ -76,23 +77,21 @@ const styles = StyleSheet.create({
     padding: 10
   },
   sectionHeader: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    backgroundColor: '#f4f4f4',
+    color: colors.grayWhite,
+    backgroundColor: colors.darkBackground,
     padding: 5
   },
-  item: {
-    fontSize: 14,
+  listItemContainer: {
+    height: 50,
+    justifyContent: 'center',
     paddingLeft: 20,
-    paddingVertical: 2
+    backgroundColor: colors.background
   },
-  header: {
-    fontSize: 32,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-  },
+  listItem: {
+    color: colors.grayWhite
+  }
 });
 
 /*

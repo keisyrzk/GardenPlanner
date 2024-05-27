@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import colors from '../Resources/colors';
 
 interface TabBarViewProps {
   onTabPress: (tabType: TabType) => void;
@@ -69,20 +70,20 @@ export default TabBarView;
 
 const styles = StyleSheet.create({
   tabBarViewContainer: {
-    height: 76,
+    height: 60
   },
   tabBarTabsContainer: {
-    height: 70,
+    height: 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.darkBackground,
     paddingHorizontal: 20,
   },
   tabBarLine: {
     width: '100%',
     height: 1,
-    backgroundColor: '#C154C1',
+    backgroundColor: colors.purple,
     marginBottom: 0,
   },
   tabBarButton: {
@@ -92,17 +93,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabBarButtonText_notSelected: {
-    color: 'gray',
-    fontSize: 14,
-    marginTop: 5,
-    marginBottom: 30,
+    color: colors.grayWhite,
+    fontSize: 18,
+    marginTop: 10,
     fontWeight: 'normal',
   },
   tabBarButtonText_selected: {
-    color: '#C154C1',
-    fontSize: 14,
-    marginTop: 5,
-    marginBottom: 30,
+    color: colors.purple,
+    fontSize: 18,
+    marginTop: 10,
     fontWeight: 'bold',
   },
 });

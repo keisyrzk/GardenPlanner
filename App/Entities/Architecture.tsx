@@ -18,6 +18,6 @@ export class Architecture extends GardenObjectProtocol {
     }
 
     getObjectType(): GardenObjectType {
-      return GardenObjectType.Decoration;
+      return GardenObjectType.Architecture;
     }
   }

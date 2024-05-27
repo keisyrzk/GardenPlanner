@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import colors from '../Resources/colors';
+import { View, StyleSheet, ActivityIndicator, Text, SafeAreaView } from 'react-native';
 import TabBarView, { TabType } from './TabBarView';
 import { useNavigation } from '@react-navigation/native';
 import { MainProps } from './AppNavigation';
@@ -74,7 +75,7 @@ const MainView = ({ route }: MainProps) => {
       tabContent = (
         (plantsQuery.isLoading || decorationsQuery.isLoading || architectureQuery.isLoading) ? (
           <View style={styles.centeredContent}>
-            <ActivityIndicator size="large" color="#C154C1" />
+            <ActivityIndicator size="large" color={colors.purple} />
             <Text style={styles.text}>Loading data...</Text>
           </View>
         ) : (
@@ -109,18 +110,19 @@ export default MainView;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     flex: 1,
+    backgroundColor: colors.darkBackground
   },
   centeredContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
+    flex: 1
   },
   text: {
-    fontSize: 20, // Ensure text is visible
-    color: 'black', // Ensure text color is visible
+    fontSize: 20, 
+    color: 'black'
   },
 });

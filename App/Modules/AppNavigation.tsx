@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
+import colors from '../Resources/colors';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import MainView from './MainView';
 
 import {
@@ -14,6 +15,8 @@ const AppNavigation = () => {
   return (
     <QueryClientProvider client={queryClient}>
     <NavigationContainer>
+    <SafeAreaView style={styles.contentContainer}>
+      <StatusBar barStyle="light-content" />
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Main"
@@ -24,6 +27,7 @@ const AppNavigation = () => {
           }}
         />
       </Stack.Navigator>
+      </SafeAreaView>
     </NavigationContainer>
     </QueryClientProvider>
   );
@@ -40,3 +44,10 @@ export type MainProps = NativeStackScreenProps<
 >;
 
 export default AppNavigation;
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    flex: 1,
+    backgroundColor: colors.darkBackground
+  }
+});

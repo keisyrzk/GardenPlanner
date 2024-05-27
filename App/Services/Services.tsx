@@ -13,9 +13,9 @@ export const services = {
 };
 
 export const baseEndpoints = {
-    plants:         baseUrl + '/3dcd4a61-5ff3-4b24-8ffe-37e003635b7f',
-    decorations:    baseUrl + '/2b310e66-3644-40f5-a803-fd2f8a51127e',
-    architecture:   baseUrl + '/ef1941c8-8f48-4b4f-a622-b9f6aa364fe7'
+    plants:         baseUrl + '/9da82441-6fe4-4688-9f9c-79960d83b5c8',
+    decorations:    baseUrl + '/be065f13-e279-46b7-b35b-a508361f4842',
+    architecture:   baseUrl + '/226db070-bfb6-44bc-807c-e3d4154811e7'
 }
 
 export async function fetchData<T>(url: string): Promise<T> {

@@ -3,7 +3,7 @@ import { baseEndpoints, fetchData } from './Services';
 
 export const architecture = {
     getAll: async (): Promise<Architecture[]> => {
-        return fetchData<Architecture[]>(baseEndpoints.plants);
+        return fetchData<Architecture[]>(baseEndpoints.architecture);
     },
 
     get: async (id: string): Promise<Architecture | null> => {

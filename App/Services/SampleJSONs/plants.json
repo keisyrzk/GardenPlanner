@@ -1,35 +1,38 @@
-{
-    "plants": [
+[
       {
+        "id": "p1",
         "type": "Flower",
         "name": "Rose",
         "maxHeight": 1.2,
         "maxWidth": 0.5
       },
       {
+        "id": "p2",
         "type": "Tree",
         "name": "Oak",
         "maxHeight": 20,
         "maxWidth": 10
       },
       {
+        "id": "p3",
         "type": "Bush",
         "name": "Holly",
         "maxHeight": 2.5,
         "maxWidth": 2.5
       },
       {
+        "id": "p4",
         "type": "Flower",
         "name": "Tulip",
         "maxHeight": 0.6,
         "maxWidth": 0.2
       },
       {
+        "id": "p5",
         "type": "Tree",
         "name": "Maple",
         "maxHeight": 15,
         "maxWidth": 8
       }
     ]
-  }
   
