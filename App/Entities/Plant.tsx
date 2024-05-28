@@ -1,5 +1,6 @@
 import { GardenObjectProtocol } from './GardenObject'
 import { GardenObjectType } from './GardenObjectType'
+
 export class Plant extends GardenObjectProtocol {
   id: string;
   type: GardenObjectType.PlantType;
@@ -18,5 +19,9 @@ export class Plant extends GardenObjectProtocol {
 
   getObjectType(): GardenObjectType {
     return GardenObjectType.Plant;
+  }
+
+  title(): string {
+    return this.name;
   }
 }

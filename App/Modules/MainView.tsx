@@ -75,7 +75,7 @@ const MainView = ({ route }: MainProps) => {
       tabContent = (
         (plantsQuery.isLoading || decorationsQuery.isLoading || architectureQuery.isLoading) ? (
           <View style={styles.centeredContent}>
-            <ActivityIndicator size="large" color={colors.purple} />
+            <ActivityIndicator size="large" color={colors.gold} />
             <Text style={styles.text}>Loading data...</Text>
           </View>
         ) : (

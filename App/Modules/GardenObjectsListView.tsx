@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { SectionList, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import colors from '../Resources/colors';
 import { GardenObject } from '../Entities/GardenObject'
-import { GardenObjectType } from '../Entities/GardenObjectType';
 import { Plant } from '../Entities/Plant'
 import { Decoration } from '../Entities/Decoration';
 import { Architecture } from '../Entities/Architecture';
@@ -29,29 +28,35 @@ const GardenObjectsListView = ({
         },
         {
           title: 'Decorations',
-          data: decorations.map(decoration => new Decoration(decoration.id, decoration.type, decoration.width, decoration.height, decoration.depth))
+          data: decorations.map(decoration => new Decoration(decoration.id, decoration.type, decoration.name, decoration.width, decoration.height, decoration.depth))
         },
         {
           title: 'Architectures',
-          data: architecture.map(architecture => new Architecture(architecture.id, architecture.type, architecture.width, architecture.height, architecture.depth))
+          data: architecture.map(architecture => new Architecture(architecture.id, architecture.type, architecture.name, architecture.width, architecture.height, architecture.depth))
         }
       ];
       
       const renderItem = (item: GardenObject) => {
-        switch (item.getObjectType()) {
-          case GardenObjectType.Plant:
-            const plant = item as Plant;
-            return <Text style={styles.listItem}>{plant.name}</Text>
+        
+        return <Text style={styles.listItem}>{item.title()}</Text>
+        // switch (item.getObjectType()) {
+        //   case GardenObjectType.Plant:
+        //     const plant = item as Plant;
+        //     return <Text style={styles.listItem}>{plant.name}</Text>
   
-          case GardenObjectType.Decoration:
-            const decoration = item as Decoration;
-            return <Text style={styles.listItem}>{decoration.width} x {decoration.height} x {decoration.depth} [m]</Text>
+        //   case GardenObjectType.Decoration:
+        //     const decoration = item as Decoration;
+        //     return <Text style={styles.listItem}>{decoration.width} x {decoration.height} x {decoration.depth} [m]</Text>
 
-          case GardenObjectType.Architecture:
-            const architecture = item as Architecture;
-            return <Text style={styles.listItem}>{architecture.width} x {architecture.height} x {architecture.depth} [m]</Text>
-        }
+        //   case GardenObjectType.Architecture:
+        //     const architecture = item as Architecture;
+        //     return <Text style={styles.listItem}>{architecture.width} x {architecture.height} x {architecture.depth} [m]</Text>
+        // }
       };
+
+      const itemSeparator = () => (
+        <View style={styles.separator} />
+      );
 
       return (
         <SectionList
@@ -65,6 +70,7 @@ const GardenObjectsListView = ({
               {renderItem(item)}
             </View>
           )}
+          ItemSeparatorComponent={itemSeparator}
         />
       );
 };
@@ -79,9 +85,12 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.grayWhite,
+    color: colors.darkGold,
     backgroundColor: colors.darkBackground,
     padding: 5
+  },
+  separator: {
+    height: 1
   },
   listItemContainer: {
     height: 50,

@@ -6,4 +6,5 @@ import { GardenObjectType } from './GardenObjectType';
 export type GardenObject = Plant | Decoration | Architecture;
 export abstract class GardenObjectProtocol {
     abstract getObjectType(): GardenObjectType;
+    abstract title(): string;
 }

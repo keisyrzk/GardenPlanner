@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   tabBarLine: {
     width: '100%',
     height: 1,
-    backgroundColor: colors.purple,
+    backgroundColor: colors.gold,
     marginBottom: 0,
   },
   tabBarButton: {
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
   tabBarButtonText_selected: {
-    color: colors.purple,
+    color: colors.gold,
     fontSize: 18,
     marginTop: 10,
     fontWeight: 'bold',

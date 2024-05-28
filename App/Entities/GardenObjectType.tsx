@@ -19,14 +19,14 @@ export namespace GardenObjectType {
   }
   
   export enum DecorationType {
-    Flowerpot,
-    Fountain
+    Flowerpot = "flowerpot",
+    Fountain = "fountain"
   }
   
   export enum ArchitectureType {
-    Pergola,
-    Patio,
-    Pathway,
-    Swing
+    Pergola = "pergola",
+    Patio = "patio",
+    Pathway = "pathway",
+    Swing = "swing"
   }
 }
