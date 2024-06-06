@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SectionList, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SectionList, Text, StyleSheet, TouchableOpacity, View, Modal, SafeAreaView } from 'react-native';
 import colors from '../Resources/colors';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { GardenObject } from '../Entities/GardenObject'
+import { GardenObjectType } from '../Entities/GardenObjectType';
 import { Plant } from '../Entities/Plant'
 import { Decoration } from '../Entities/Decoration';
 import { Architecture } from '../Entities/Architecture';
+import { MainProps } from './AppNavigation';
+import AddGardenObjectView from '../Views/AddGardenObjectView';
 
 const GardenObjectsListView = ({
   plants,
@@ -16,71 +20,171 @@ const GardenObjectsListView = ({
   decorations: Decoration[];
   architecture: Architecture[];
 }) => {
-      type GardenSection = {
-        title: string;
-        data: GardenObject[];
-      };
+  type GardenSection = {
+    title: string;
+    data: GardenObject[];
+  };
 
-      const sections: GardenSection[] = [
-        {
-          title: 'Plants',
-          data: plants.map(plant => new Plant(plant.id, plant.type, plant.name, plant.maxHeight, plant.maxWidth))
-        },
-        {
-          title: 'Decorations',
-          data: decorations.map(decoration => new Decoration(decoration.id, decoration.type, decoration.name, decoration.width, decoration.height, decoration.depth))
-        },
-        {
-          title: 'Architectures',
-          data: architecture.map(architecture => new Architecture(architecture.id, architecture.type, architecture.name, architecture.width, architecture.height, architecture.depth))
-        }
-      ];
-      
-      const renderItem = (item: GardenObject) => {
-        
-        return <Text style={styles.listItem}>{item.title()}</Text>
-        // switch (item.getObjectType()) {
-        //   case GardenObjectType.Plant:
-        //     const plant = item as Plant;
-        //     return <Text style={styles.listItem}>{plant.name}</Text>
-  
-        //   case GardenObjectType.Decoration:
-        //     const decoration = item as Decoration;
-        //     return <Text style={styles.listItem}>{decoration.width} x {decoration.height} x {decoration.depth} [m]</Text>
+  const navigation = useNavigation<MainProps['navigation']>();
+  const onSelectGardenObject = (gardenObject: GardenObject) => {
+    navigation.navigate('GardenObjectDetails', {
+      gardenObject,
+    });
+  };
 
-        //   case GardenObjectType.Architecture:
-        //     const architecture = item as Architecture;
-        //     return <Text style={styles.listItem}>{architecture.width} x {architecture.height} x {architecture.depth} [m]</Text>
-        // }
-      };
+  const [modalPresentationState, setModalPresentationState] = useState<{
+    isModalPresented: boolean;
+    selectedSection: GardenObjectType | null;
+  }>({
+    isModalPresented: false,
+    selectedSection: null,
+  });
 
-      const itemSeparator = () => (
-        <View style={styles.separator} />
-      );
+  const [sections, setSections] = useState<GardenSection[]>([
+    {
+      title: 'Plants',
+      data: plants.map(plant => new Plant(plant.id, plant.type, plant.name, plant.maxHeight, plant.maxWidth))
+    },
+    {
+      title: 'Decorations',
+      data: decorations.map(decoration => new Decoration(decoration.id, decoration.type, decoration.name, decoration.width, decoration.height, decoration.depth))
+    },
+    {
+      title: 'Architectures',
+      data: architecture.map(architecture => new Architecture(architecture.id, architecture.type, architecture.name, architecture.width, architecture.height, architecture.depth))
+    }
+  ]);
 
-      return (
-        <SectionList
-          sections={sections}
-          keyExtractor={(item, _) => item.id.toString()}
-          renderSectionHeader={({section: {title}}) => (
-            <Text style={styles.sectionHeader}>{title}</Text>
-          )}
-          renderItem={({item}) => (
-            <View style={styles.listItemContainer}>
-              {renderItem(item)}
-            </View>
-          )}
-          ItemSeparatorComponent={itemSeparator}
-        />
-      );
+  const onAddClick = (gardenObjectType: GardenObjectType) => {
+    setModalPresentationState({
+      isModalPresented: true,
+      selectedSection: gardenObjectType
+    });
+  };
+
+  const closeModal = () => {
+    setModalPresentationState({
+      isModalPresented: false,
+      selectedSection: null,
+    });
+  };
+
+  const onNewGardenObjectSave = (gardenObject: GardenObject) => {
+    const updatedSections = sections.map(section => {
+      if (section.title === getSectionTitle(gardenObject.getObjectType())) {
+        return {
+          ...section,
+          data: [...section.data, gardenObject]
+        };
+      }
+      return section;
+    });
+
+    console.log('Updated Sections:', updatedSections); // Log the updated sections before setting the state
+    setSections(updatedSections);
+    closeModal();
+  };
+
+  const getSectionTitle = (gardenObjectType: GardenObjectType): string => {
+    switch (gardenObjectType) {
+      case GardenObjectType.Plant:
+        return 'Plants';
+      case GardenObjectType.Decoration:
+        return 'Decorations';
+      case GardenObjectType.Architecture:
+        return 'Architectures';
+      default:
+        return '';
+    }
+  };
+
+  const renderItem = (item: GardenObject) => {
+    return (
+      <TouchableOpacity onPress={() => onSelectGardenObject(item)}>
+        <Text style={styles.listItem}>{item.title()}</Text>
+      </TouchableOpacity>
+    )
+  };
+
+  const renderSectionHeader = (title: string, gardenObjectType: GardenObjectType) => {
+    return (
+      <View style={styles.sectionHeaderContainer}>
+        <Text style={styles.sectionHeader}>{title}</Text>
+        <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => onAddClick(gardenObjectType)}
+          >
+            <Icon name="add" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const itemSeparator = () => (
+    <View style={styles.separator} />
+  );
+
+  return (
+    <View style={styles.container}>
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, _) => item.id.toString()}
+        renderSectionHeader={({ section: { title, data } }) => {
+          const sectionObjectType = data[0]?.getObjectType();
+          return renderSectionHeader(title, sectionObjectType);
+        }}
+        renderItem={({ item }) => (
+          <View style={styles.listItemContainer}>
+            {renderItem(item)}
+          </View>
+        )}
+        ItemSeparatorComponent={itemSeparator}
+      />
+      <Modal
+        visible={modalPresentationState.isModalPresented}
+        transparent={false}
+        animationType='slide'
+        onRequestClose={closeModal}
+      >
+        <SafeAreaView style={styles.contentContainer}>
+          <View style={styles.modalContainer}>
+            <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => closeModal()}
+              >
+                <Icon name="close" size={24} color="white" />
+            </TouchableOpacity>
+            <AddGardenObjectView
+              gardenObjectType={modalPresentationState.selectedSection}
+              onSave={onNewGardenObjectSave}
+            />
+          </View>
+        </SafeAreaView>
+      </Modal>
+    </View>
+  );
 };
 
 export default GardenObjectsListView;
 
 const styles = StyleSheet.create({
+  
+  contentContainer: {
+    flex: 1,
+    backgroundColor: colors.darkBackground
+  },
+  container: {
+    flex: 1,
+  },
   scrollViewContentContainer: {
     flex: 1,
     padding: 10
+  },
+  sectionHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.darkBackground,
+    padding: 10,
   },
   sectionHeader: {
     fontSize: 20,
@@ -100,7 +204,44 @@ const styles = StyleSheet.create({
   },
   listItem: {
     color: colors.grayWhite
-  }
+  },
+  addButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.darkGold,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+  },
+  closeButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.darkGold,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-end'
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.darkBackground,
+    paddingHorizontal: 16,
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+    color: colors.darkGold
+  },
 });
 
 /*

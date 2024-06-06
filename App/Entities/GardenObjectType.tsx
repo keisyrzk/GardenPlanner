@@ -13,9 +13,9 @@ export enum GardenObjectType {
 
 export namespace GardenObjectType {
   export enum PlantType {
-    Flower,
-    Tree,
-    Bush
+    Flower = "flower",
+    Tree = "tree",
+    Bush = "bush"
   }
   
   export enum DecorationType {
@@ -28,5 +28,19 @@ export namespace GardenObjectType {
     Patio = "patio",
     Pathway = "pathway",
     Swing = "swing"
+  }
+
+  // returns the name of the GardenObjectType
+  export function getName(type: GardenObjectType): string {
+    switch (type) {
+      case GardenObjectType.Plant:
+        return "Plant";
+      case GardenObjectType.Architecture:
+        return "Architecture";
+      case GardenObjectType.Decoration:
+        return "Decoration";
+      default:
+        return "Unknown";
+    }
   }
 }
