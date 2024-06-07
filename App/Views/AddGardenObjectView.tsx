@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { GardenObject } from '../Entities/GardenObject'
+import { GardenObject } from '../Entities/GardenObject';
 import { GardenObjectType } from '../Entities/GardenObjectType';
 import { Plant } from '../Entities/Plant'; 
-import { Decoration } from '../Entities/Decoration'
-import { Architecture } from '../Entities/Architecture'
+import { Decoration } from '../Entities/Decoration';
+import { Architecture } from '../Entities/Architecture';
 import colors from '../Resources/colors';
-import uuid from 'react-native-uuid'; //generating uuid
+import uuid from 'react-native-uuid'; // Generating UUID
 
+/**
+ * AddGardenObjectView component allows users to add a new garden object.
+ * @param {Object} props - The properties passed to the component.
+ * @param {GardenObjectType} props.gardenObjectType - The type of garden object being added.
+ * @param {function} props.onSave - Function to call when the garden object is saved.
+ */
 const AddGardenObjectView = ({
   gardenObjectType,
   onSave,
@@ -15,6 +21,7 @@ const AddGardenObjectView = ({
   gardenObjectType: GardenObjectType;
   onSave: (gardenObject: GardenObject) => void;
 }) => {
+  // State variables for form inputs
   const [name, setName] = useState('');
   const [maxHeight, setMaxHeight] = useState('');
   const [maxWidth, setMaxWidth] = useState('');
@@ -24,11 +31,14 @@ const AddGardenObjectView = ({
   const [subtype, setSubtype] = useState<string>(''); // State for selected subtype
   const [showSubtypeList, setShowSubtypeList] = useState(false); // State to show/hide subtype list
 
-
+  /**
+   * Handles the save button press, creating a new garden object and calling onSave.
+   */
   const handleSave = () => {
     let newGardenObject: GardenObject;
-    const uniqueId: string = uuid.v4() as string;
+    const uniqueId: string = uuid.v4() as string; // Generate a unique ID
     
+    // Create a new garden object based on the selected type
     switch (gardenObjectType) {
       case GardenObjectType.Plant:
         newGardenObject = new Plant(
@@ -69,6 +79,11 @@ const AddGardenObjectView = ({
     onSave(newGardenObject);
   };
 
+  /**
+   * Renders the list items for subtype selection.
+   * @param {string[]} items - The list of subtypes to render.
+   * @returns {JSX.Element[]} A list of TouchableOpacity elements for each subtype.
+   */
   const renderListItems = (items: string[]) => {
     return items.map((item) => (
       <TouchableOpacity
@@ -84,6 +99,10 @@ const AddGardenObjectView = ({
     ));
   };
 
+  /**
+   * Renders the input fields based on the selected garden object type.
+   * @returns {JSX.Element} A view containing the input fields for the garden object.
+   */
   const objectView = () => {
     let subtypes;
     switch (gardenObjectType) {

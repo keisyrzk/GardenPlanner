@@ -11,14 +11,23 @@ export enum TabType {
   plan = 'Plan'
 }
 
+/**
+ * TabBarView component that displays a tab bar with two tabs: List and Plan.
+ * @param {TabBarViewProps} props - The properties passed to the component.
+ */
 const TabBarView = ({
   onTabPress,
 }: {
   onTabPress: TabBarViewProps['onTabPress'];
 }) => {
     
-    // initial selection `list` tab
+    // Initial selection of the `list` tab
     const [selectedTab, setSelectedTab] = useState<TabType>(TabType.list);
+
+    /**
+     * Handles the press event on a tab bar button.
+     * @param {TabType} tabType - The type of the tab that was pressed.
+     */
     const handleTabBarPress = (tabType: TabType) => {
         setSelectedTab(tabType);
         onTabPress(tabType);
@@ -28,7 +37,7 @@ const TabBarView = ({
     <View style={styles.tabBarViewContainer}>
       <View style={styles.tabBarLine} />
       <View style={styles.tabBarTabsContainer}>
-      {Object.values(TabType).map(tabType => (
+        {Object.values(TabType).map(tabType => (
           <TabBarButton
             key={tabType}
             tabType={tabType}
@@ -41,6 +50,13 @@ const TabBarView = ({
   );
 };
 
+/**
+ * TabBarButton component that represents an individual tab in the tab bar.
+ * @param {Object} props - The properties passed to the component.
+ * @param {TabType} props.tabType - The type of the tab.
+ * @param {TabType} props.selectedTab - The currently selected tab.
+ * @param {TabBarViewProps['onTabPress']} props.onTabPress - The function to call when the tab is pressed.
+ */
 const TabBarButton = ({
   tabType,
   selectedTab,

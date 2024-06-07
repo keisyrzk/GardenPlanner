@@ -3,9 +3,9 @@ import { useNavigation } from '@react-navigation/native';
 import { SectionList, Text, StyleSheet, TouchableOpacity, View, Modal, SafeAreaView } from 'react-native';
 import colors from '../Resources/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { GardenObject } from '../Entities/GardenObject'
+import { GardenObject } from '../Entities/GardenObject';
 import { GardenObjectType } from '../Entities/GardenObjectType';
-import { Plant } from '../Entities/Plant'
+import { Plant } from '../Entities/Plant';
 import { Decoration } from '../Entities/Decoration';
 import { Architecture } from '../Entities/Architecture';
 import { MainProps } from './AppNavigation';
@@ -26,12 +26,21 @@ const GardenObjectsListView = ({
   };
 
   const navigation = useNavigation<MainProps['navigation']>();
+
+  /**
+   * Navigates to the GardenObjectDetails view when a garden object is selected.
+   */
   const onSelectGardenObject = (gardenObject: GardenObject) => {
     navigation.navigate('GardenObjectDetails', {
       gardenObject,
     });
   };
 
+  /**
+   * State to manage the modal presentation.
+   * - isModalPresented: boolean indicating if the modal is open.
+   * - selectedSection: the type of garden object selected for the modal.
+   */
   const [modalPresentationState, setModalPresentationState] = useState<{
     isModalPresented: boolean;
     selectedSection: GardenObjectType | null;
@@ -40,6 +49,9 @@ const GardenObjectsListView = ({
     selectedSection: null,
   });
 
+  /**
+   * State to manage the sections of garden objects.
+   */
   const [sections, setSections] = useState<GardenSection[]>([
     {
       title: 'Plants',
@@ -55,6 +67,9 @@ const GardenObjectsListView = ({
     }
   ]);
 
+  /**
+   * Opens the modal to add a new garden object of the specified type.
+   */
   const onAddClick = (gardenObjectType: GardenObjectType) => {
     setModalPresentationState({
       isModalPresented: true,
@@ -62,6 +77,9 @@ const GardenObjectsListView = ({
     });
   };
 
+  /**
+   * Closes the modal.
+   */
   const closeModal = () => {
     setModalPresentationState({
       isModalPresented: false,
@@ -69,6 +87,9 @@ const GardenObjectsListView = ({
     });
   };
 
+  /**
+   * Adds the new garden object to the appropriate section and closes the modal.
+   */
   const onNewGardenObjectSave = (gardenObject: GardenObject) => {
     const updatedSections = sections.map(section => {
       if (section.title === getSectionTitle(gardenObject.getObjectType())) {
@@ -85,6 +106,9 @@ const GardenObjectsListView = ({
     closeModal();
   };
 
+  /**
+   * Returns the section title corresponding to the garden object type.
+   */
   const getSectionTitle = (gardenObjectType: GardenObjectType): string => {
     switch (gardenObjectType) {
       case GardenObjectType.Plant:
@@ -98,6 +122,9 @@ const GardenObjectsListView = ({
     }
   };
 
+  /**
+   * Renders an individual garden object item.
+   */
   const renderItem = (item: GardenObject) => {
     return (
       <TouchableOpacity onPress={() => onSelectGardenObject(item)}>
@@ -106,6 +133,9 @@ const GardenObjectsListView = ({
     )
   };
 
+  /**
+   * Renders the header for each section.
+   */
   const renderSectionHeader = (title: string, gardenObjectType: GardenObjectType) => {
     return (
       <View style={styles.sectionHeaderContainer}>
@@ -120,6 +150,9 @@ const GardenObjectsListView = ({
     )
   }
 
+  /**
+   * Renders a separator between items.
+   */
   const itemSeparator = () => (
     <View style={styles.separator} />
   );
@@ -168,7 +201,6 @@ const GardenObjectsListView = ({
 export default GardenObjectsListView;
 
 const styles = StyleSheet.create({
-  
   contentContainer: {
     flex: 1,
     backgroundColor: colors.darkBackground
@@ -247,29 +279,28 @@ const styles = StyleSheet.create({
 /*
   Alternative approach - sample mocked data
 
-      const [gardenObjects, setGardenObjects] = useState<GardenObject[]>([
-      new Plant('p1', GardenObjectType.PlantType.Tree, 'Oak', 20, 10),
-      new Decoration('d1', GardenObjectType.DecorationType.Flowerpot, 0.5, 0.5, 0.6),
-      new Architecture('a1', GardenObjectType.ArchitectureType.Pergola, 3.0, 4.0, 2.5)
-    ]);
+  const [gardenObjects, setGardenObjects] = useState<GardenObject[]>([
+    new Plant('p1', GardenObjectType.PlantType.Tree, 'Oak', 20, 10),
+    new Decoration('d1', GardenObjectType.DecorationType.Flowerpot, 0.5, 0.5, 0.6),
+    new Architecture('a1', GardenObjectType.ArchitectureType.Pergola, 3.0, 4.0, 2.5)
+  ]);
 
-      create main sections 
-      const plantObjects = gardenObjects.filter((gardenObject): gardenObject is Plant => {
-        return Object
-                .values(GardenObjectType.PlantType)
-                .includes(gardenObject.type as GardenObjectType.PlantType);
-      });
+  // Create main sections 
+  const plantObjects = gardenObjects.filter((gardenObject): gardenObject is Plant => {
+    return Object
+            .values(GardenObjectType.PlantType)
+            .includes(gardenObject.type as GardenObjectType.PlantType);
+  });
 
-      const decorationsObjects = gardenObjects.filter((gardenObject): gardenObject is Decoration => {
-        return Object
-                .values(GardenObjectType.DecorationType)
-                .includes(gardenObject.type as GardenObjectType.DecorationType);
-      });
+  const decorationsObjects = gardenObjects.filter((gardenObject): gardenObject is Decoration => {
+    return Object
+            .values(GardenObjectType.DecorationType)
+            .includes(gardenObject.type as GardenObjectType.DecorationType);
+  });
 
-      const architectureObjects = gardenObjects.filter((gardenObject): gardenObject is Architecture => {
-        return Object
-                .values(GardenObjectType.ArchitectureType)
-                .includes(gardenObject.type as GardenObjectType.ArchitectureType);
-      });
-
+  const architectureObjects = gardenObjects.filter((gardenObject): gardenObject is Architecture => {
+    return Object
+            .values(GardenObjectType.ArchitectureType)
+            .includes(gardenObject.type as GardenObjectType.ArchitectureType);
+  });
 */

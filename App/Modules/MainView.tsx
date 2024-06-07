@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import colors from '../Resources/colors';
-import { View, StyleSheet, ActivityIndicator, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import TabBarView, { TabType } from './TabBarView';
 import { useNavigation } from '@react-navigation/native';
 import { MainProps } from './AppNavigation';
@@ -13,9 +13,10 @@ import GardenPlanView from './GardenPlanView';
 import GardenObjectsListView from './GardenObjectsListView';
 
 const MainView = ({ route }: MainProps) => {
-  const [tabType, setTabType] = useState(TabType.list);
+  const [tabType, setTabType] = useState(TabType.list); // Manage the selected tab type
   const navigation = useNavigation<MainProps['navigation']>();
 
+  // Fetch plants data
   const plantsQuery = useQuery<Plant[]>('plants', services.garden.plants.getAll, {
     onSuccess: (data) => {
       console.log('Fetched plants:', data);
@@ -25,6 +26,7 @@ const MainView = ({ route }: MainProps) => {
     },
   });
 
+  // Fetch decorations data
   const decorationsQuery = useQuery<Decoration[]>('decorations', services.garden.decorations.getAll, {
     onSuccess: (data) => {
       console.log('Fetched decorations:', data);
@@ -34,6 +36,7 @@ const MainView = ({ route }: MainProps) => {
     },
   });
 
+  // Fetch architecture data
   const architectureQuery = useQuery<Architecture[]>('architecture', services.garden.architecture.getAll, {
     onSuccess: (data) => {
       console.log('Fetched architecture:', data);
@@ -43,12 +46,19 @@ const MainView = ({ route }: MainProps) => {
     },
   });
 
+  /**
+   * Refreshes the data by refetching plants, decorations, and architecture.
+   */
   const onRefresh = () => {
     plantsQuery.refetch();
     decorationsQuery.refetch();
     architectureQuery.refetch();
   };
 
+  /**
+   * Handles tab bar press events.
+   * @param {TabType} newTabType - The new tab type that was pressed.
+   */
   const handleTabBarPress = async (newTabType) => {
     console.log('Tab pressed:', newTabType);
     switch (newTabType) {
@@ -56,7 +66,7 @@ const MainView = ({ route }: MainProps) => {
         onRefresh();
         break;
       case TabType.plan:
-        // ex. fetch plan related data
+        // Add any data fetching or processing related to the plan tab here
         break;
       default:
         console.error('Unknown tab type:', newTabType);
@@ -69,6 +79,7 @@ const MainView = ({ route }: MainProps) => {
     console.log('Tab type changed:', tabType);
   }, [tabType]);
 
+  // Determine the content to display based on the selected tab
   let tabContent = null;
   switch (tabType) {
     case TabType.list:
@@ -110,19 +121,19 @@ export default MainView;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: colors.darkBackground
+    backgroundColor: colors.darkBackground,
   },
   centeredContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
   },
   text: {
-    fontSize: 20, 
-    color: 'black'
+    fontSize: 20,
+    color: 'black',
   },
 });
