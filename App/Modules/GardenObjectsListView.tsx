@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState, memo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SectionList, Text, StyleSheet, TouchableOpacity, View, Modal, SafeAreaView } from 'react-native';
 import colors from '../Resources/colors';
@@ -10,6 +10,25 @@ import { Decoration } from '../Entities/Decoration';
 import { Architecture } from '../Entities/Architecture';
 import { MainProps } from './AppNavigation';
 import AddGardenObjectView from '../Views/AddGardenObjectView';
+
+// external components
+
+// create const here rather directly in "render" because the inline function is treated as a new reference and the render happens each time from scratch
+const keyExtractor = (item, _) => item.id.toString()
+// Renders a separator between items.
+const itemSeparator = () => <View style={styles.separator} />
+
+// pure component
+const SectionListItem = memo(({item, onSelectGardenObject}: {item: GardenObject, onSelectGardenObject: (item: GardenObject) => void}) => {
+  return <View style={styles.listItemContainer}>
+            <TouchableOpacity onPress={() => onSelectGardenObject(item)}>
+              <Text style={styles.listItem}>{item.title()}</Text>
+            </TouchableOpacity>
+         </View>
+})
+
+
+
 
 const GardenObjectsListView = ({
   plants,
@@ -30,11 +49,20 @@ const GardenObjectsListView = ({
   /**
    * Navigates to the GardenObjectDetails view when a garden object is selected.
    */
-  const onSelectGardenObject = (gardenObject: GardenObject) => {
-    navigation.navigate('GardenObjectDetails', {
-      gardenObject,
-    });
-  };
+    // better performance version
+  const onSelectGardenObject = useCallback(
+    (gardenObject: GardenObject) => {
+      navigation.navigate('GardenObjectDetails', {
+        gardenObject,
+      });
+    }, [navigation] // recreate only if navigation changes
+  )
+  // standard version
+  // const onSelectGardenObject = (gardenObject: GardenObject) => {
+  //   navigation.navigate('GardenObjectDetails', {
+  //     gardenObject,
+  //   });
+  // };
 
   /**
    * State to manage the modal presentation.
@@ -70,12 +98,14 @@ const GardenObjectsListView = ({
   /**
    * Opens the modal to add a new garden object of the specified type.
    */
-  const onAddClick = (gardenObjectType: GardenObjectType) => {
-    setModalPresentationState({
-      isModalPresented: true,
-      selectedSection: gardenObjectType
-    });
-  };
+  const onAddClick = useCallback(
+    (gardenObjectType: GardenObjectType) => {
+      setModalPresentationState({
+        isModalPresented: true,
+        selectedSection: gardenObjectType
+      });
+    }, [setModalPresentationState] // recreate only if setModalPresentationState changes
+  )
 
   /**
    * Closes the modal.
@@ -125,52 +155,69 @@ const GardenObjectsListView = ({
   /**
    * Renders an individual garden object item.
    */
-  const renderItem = (item: GardenObject) => {
-    return (
-      <TouchableOpacity onPress={() => onSelectGardenObject(item)}>
-        <Text style={styles.listItem}>{item.title()}</Text>
-      </TouchableOpacity>
-    )
-  };
+  // better performance version
+  const renderItem = useCallback(({item})=>{
+    return <SectionListItem item={item} onSelectGardenObject={onSelectGardenObject}/>
+  }, 
+  [onSelectGardenObject]) // recreate only if onSelectGardenObject changes
+
+  // standard version
+  // const renderItem = (item: GardenObject) => {
+  //   return (
+  //     <TouchableOpacity onPress={() => onSelectGardenObject(item)}>
+  //       <Text style={styles.listItem}>{item.title()}</Text>
+  //     </TouchableOpacity>
+  //   )
+  // };
 
   /**
    * Renders the header for each section.
    */
-  const renderSectionHeader = (title: string, gardenObjectType: GardenObjectType) => {
-    return (
-      <View style={styles.sectionHeaderContainer}>
-        <Text style={styles.sectionHeader}>{title}</Text>
-        <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => onAddClick(gardenObjectType)}
-          >
-            <Icon name="add" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-    )
-  }
+  // better performance version
+  const renderSectionHeader = useCallback(
+    (title: string, gardenObjectType: GardenObjectType) => {
+      return (
+        <View style={styles.sectionHeaderContainer}>
+          <Text style={styles.sectionHeader}>{title}</Text>
+          <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => onAddClick(gardenObjectType)}
+            >
+              <Icon name="add" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      )
+    }, [onAddClick] // recreate only if onAddClick changes
+  )
 
-  /**
-   * Renders a separator between items.
-   */
-  const itemSeparator = () => (
-    <View style={styles.separator} />
-  );
+  const createSectionHeader = useCallback(({ section: { title, data } }) => {
+    const sectionObjectType = data[0]?.getObjectType();
+    return renderSectionHeader(title, sectionObjectType);
+  }, 
+  [renderSectionHeader]) // recreate only if renderSectionHeader changes
+
+  // standard version
+  // const renderSectionHeader = (title: string, gardenObjectType: GardenObjectType) => {
+  //   return (
+  //     <View style={styles.sectionHeaderContainer}>
+  //       <Text style={styles.sectionHeader}>{title}</Text>
+  //       <TouchableOpacity
+  //           style={styles.addButton}
+  //           onPress={() => onAddClick(gardenObjectType)}
+  //         >
+  //           <Icon name="add" size={24} color="white" />
+  //       </TouchableOpacity>
+  //     </View>
+  //   )
+  // }
 
   return (
     <View style={styles.container}>
       <SectionList
         sections={sections}
-        keyExtractor={(item, _) => item.id.toString()}
-        renderSectionHeader={({ section: { title, data } }) => {
-          const sectionObjectType = data[0]?.getObjectType();
-          return renderSectionHeader(title, sectionObjectType);
-        }}
-        renderItem={({ item }) => (
-          <View style={styles.listItemContainer}>
-            {renderItem(item)}
-          </View>
-        )}
+        keyExtractor={keyExtractor}
+        renderSectionHeader={createSectionHeader}
+        renderItem={renderItem}
         ItemSeparatorComponent={itemSeparator}
       />
       <Modal
