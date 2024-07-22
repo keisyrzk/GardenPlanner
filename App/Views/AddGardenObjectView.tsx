@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { GardenObject } from '../Entities/GardenObject';
 import { GardenObjectType } from '../Entities/GardenObjectType';
 import { Plant } from '../Entities/Plant'; 
