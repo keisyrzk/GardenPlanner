@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug iOS",
+            "type": "reactnative",
+            "request": "launch",
+            "platform": "ios",
+            "target": "8FDBA44C-29C0-409C-8925-DACD58F51C31",
+            "sourceMaps": true,
+            "cwd": "${workspaceFolder}",
+            "expoHostType": "tunnel"
+        },
+        {
+            "name": "Attach to Packager",
+            "type": "reactnative",
+            "request": "attach",
+            "port": 8081,
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true
+        }
+    ]
+}

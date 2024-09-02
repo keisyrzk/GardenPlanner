@@ -3,6 +3,7 @@ import { baseEndpoints, fetchData } from './Services';
 
 export const plants = {
     getAll: async (): Promise<Plant[]> => {
+        console.log('::: PLANTS getAll called :::');
         return fetchData<Plant[]>(baseEndpoints.plants);
     },
 

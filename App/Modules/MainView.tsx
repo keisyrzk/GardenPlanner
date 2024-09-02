@@ -4,11 +4,8 @@ import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import TabBarView, { TabType } from './TabBarView';
 import { useNavigation } from '@react-navigation/native';
 import { MainProps } from './AppNavigation';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query'
 import { services } from '../Services/Services';
-import { Plant } from '../Entities/Plant';
-import { Decoration } from '../Entities/Decoration';
-import { Architecture } from '../Entities/Architecture';
 import GardenPlanView from './GardenPlanView';
 import GardenObjectsListView from './GardenObjectsListView';
 
@@ -17,42 +14,32 @@ const MainView = ({ route }: MainProps) => {
   const navigation = useNavigation<MainProps['navigation']>();
 
   // Fetch plants data
-  const plantsQuery = useQuery<Plant[]>('plants', services.garden.plants.getAll, {
-    onSuccess: (data) => {
-      console.log('Fetched plants:', data);
-    },
-    onError: (err) => {
-      console.log('Fetching error:', err);
-    },
-  });
+  const { data: plants, isSuccess: isPlantsFetchSuccessful, refetch: plantsRefetch } = useQuery({
+    queryKey: ['plants'],
+    queryFn: () => services.garden.plants.getAll(),
+  })
 
   // Fetch decorations data
-  const decorationsQuery = useQuery<Decoration[]>('decorations', services.garden.decorations.getAll, {
-    onSuccess: (data) => {
-      console.log('Fetched decorations:', data);
-    },
-    onError: (err) => {
-      console.log('Fetching error:', err);
-    },
-  });
+  const { data: decorations, isSuccess: isDecorationsFetchSuccessful, refetch: decorationsRefetch } = useQuery({
+    queryKey: ['decorations'],
+    queryFn: () => services.garden.decorations.getAll(),
+  })
+
 
   // Fetch architecture data
-  const architectureQuery = useQuery<Architecture[]>('architecture', services.garden.architecture.getAll, {
-    onSuccess: (data) => {
-      console.log('Fetched architecture:', data);
-    },
-    onError: (err) => {
-      console.log('Fetching error:', err);
-    },
-  });
+  const { data: architecture, isSuccess: isArchitectureFetchSuccessful, refetch: architectureRefetch } = useQuery({
+    queryKey: ['architecture'],
+    queryFn: () => services.garden.architecture.getAll(),
+  })
+  
 
   /**
    * Refreshes the data by refetching plants, decorations, and architecture.
    */
   const onRefresh = () => {
-    plantsQuery.refetch();
-    decorationsQuery.refetch();
-    architectureQuery.refetch();
+    plantsRefetch();
+    decorationsRefetch();
+    architectureRefetch();
   };
 
   /**
@@ -84,22 +71,22 @@ const MainView = ({ route }: MainProps) => {
   switch (tabType) {
     case TabType.list:
       tabContent = (
-        (plantsQuery.isLoading || decorationsQuery.isLoading || architectureQuery.isLoading) ? (
+        (isPlantsFetchSuccessful && isDecorationsFetchSuccessful && isArchitectureFetchSuccessful) ? (
+           <GardenObjectsListView
+            plants={plants}
+            decorations={decorations}
+            architecture={architecture}
+          />
+        ) : (
           <View style={styles.centeredContent}>
             <ActivityIndicator size="large" color={colors.gold} />
             <Text style={styles.text}>Loading data...</Text>
           </View>
-        ) : (
-          <GardenObjectsListView
-            plants={plantsQuery.data}
-            decorations={decorationsQuery.data}
-            architecture={architectureQuery.data}
-          />
         )
       );
       break;
     case TabType.plan:
-      tabContent = <GardenPlanView navigation={undefined} />;
+      tabContent = <GardenPlanView />;
       break;
     default:
       tabContent = (

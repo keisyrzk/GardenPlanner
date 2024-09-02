@@ -27,13 +27,10 @@ const SectionListItem = memo(({item, onSelectGardenObject}: {item: GardenObject,
          </View>
 })
 
-
-
-
 const GardenObjectsListView = ({
-  plants = [],
-  decorations = [],
-  architecture = []
+  plants,
+  decorations,
+  architecture
 } : {
   plants: Plant[];
   decorations: Decoration[];

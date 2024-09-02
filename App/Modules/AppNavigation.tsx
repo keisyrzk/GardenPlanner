@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import colors from '../Resources/colors';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import MainView from './MainView';
